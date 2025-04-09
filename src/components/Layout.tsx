@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Form } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -25,6 +25,7 @@ import {
   Person,
   Home,
   Logout,
+  Description
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
@@ -79,6 +80,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const menuItems = [
     { text: 'Home', icon: <Home />, path: '/' },
+    { text: 'Add Members', icon: <Description />, path: '/add-members' },
     { text: 'Tree', icon: <AccountTree />, path: '/tree' },
     { text: 'Search', icon: <Search />, path: '/search' },
     { text: 'Profile', icon: <Person />, path: '/profile' },

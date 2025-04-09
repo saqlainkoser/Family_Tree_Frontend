@@ -51,13 +51,20 @@ const Home: React.FC = () => {
     <Layout>
       <Box
         sx={{
+          position : 'absolute',
+          left  : 0,
+          top : 30,
+          width: '100%',
           minHeight: 'calc(100vh - 64px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           background: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
-          py: 8,
+          py: 7,
+          '@media (min-width: 1024px)': {
+            pl: 30,
+          },
         }}
       >
         <Container maxWidth="lg">
@@ -83,7 +90,6 @@ const Home: React.FC = () => {
               variant="h5"
               align="center"
               color="text.secondary"
-              paragraph
               sx={{ mb: 6 }}
             >
               Build your family tree, search for relatives, and preserve your family's legacy
