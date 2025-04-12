@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { OrgChart } from 'd3-org-chart';
 import { TreeContext } from '../Context/TreeContext';
 import { useContext } from 'react';
 import FamilyMemberForm from '../components/Form';
 import { Dialog } from '@mui/material';
 import axios from 'axios';
-
 function Tree() {
   const [formOpen, setFormOpen] = useState(false);
   const chartRef = useRef();
   const chartInstanceRef = useRef();
-  const { flag, setFlag } = useContext(TreeContext);
+  // eslint-disable-next-line
+  const { flag } = useContext(TreeContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
   const [detailsPopupOpen, setDetailsPopupOpen] = useState(false);
   const [familyData, setFamilyData] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
-
+  
   // Check if device is mobile
   useEffect(() => {
     const checkIfMobile = () => {
@@ -34,7 +34,7 @@ function Tree() {
   }, []);
 
   // Define all functions at the top
-  const filterChart = () => {
+  const filterChart = useCallback(() => {
     if (!chartInstanceRef.current) return;
     
     chartInstanceRef.current.clearHighlighting();
@@ -51,15 +51,15 @@ function Tree() {
       }
     });
     chartInstanceRef.current.data(data).render().fit();
-  };
+  }, [searchTerm]);
 
-  const fitToScreen = () => {
+  const fitToScreen = useCallback(() => {
     if (!chartInstanceRef.current) return;
     
     // For mobile, apply additional scaling and positioning
     if (isMobile) {
-      const containerWidth = chartRef.current.clientWidth;
-      const containerHeight = chartRef.current.clientHeight;
+      // const containerWidth = chartRef.current.clientWidth;
+      // const containerHeight = chartRef.current.clientHeight;
       
       // Adjust the scale based on screen size
       chartInstanceRef.current
@@ -72,7 +72,7 @@ function Tree() {
     } else {
       chartInstanceRef.current.fit();
     }
-  };
+  }, [isMobile]);
 
   const expandAll = () => {
     if (chartInstanceRef.current) chartInstanceRef.current.expandAll().fit();
@@ -263,11 +263,14 @@ function Tree() {
         .nodeContent(function (d, i, arr, state) {
           const colors = ['#278B8D', '#404040', '#0C5C73', '#33C6CB'];
           const color = colors[d.depth % colors.length];
-          
+          if(!d.data.image){
+            d.data.image = "http://res.cloudinary.com/djeajklvz/image/upload/c_auto,g_auto,h_200,w_200/v1/familyTree/16aq11ka";
+          }
           if (isMobile) {
+            
             return `
               <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:50px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
-                <img src="${d.data.imageUrl}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:100px;width:50px;height:50px;" />
+                <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:100px;width:50px;height:50px;" />
                 
                 <div style="color:#fafafa;font-size:${d.depth < 2 ? 12 : 10}px;font-weight:bold;margin-left:60px;margin-top:10px">
                   ${d.data.firstName} ${d.data.lastName}
@@ -293,7 +296,7 @@ function Tree() {
           } else {
             return `
               <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:50px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
-                <img src="${d.data.imageUrl}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:100px;width:60px;height:60px;" />
+                <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:100px;width:60px;height:60px;" />
                 
                 <div style="color:#fafafa;font-size:${d.depth < 2 ? 16 : 12}px;font-weight:bold;margin-left:70px;margin-top:15px">
                   ${d.data.firstName} ${d.data.lastName}
@@ -333,21 +336,22 @@ function Tree() {
         chartInstanceRef.current = null;
       }
     };
-  }, [familyData, isMobile]);
+  }, [familyData, isMobile,fitToScreen,flag]);
+ 
 
   // For search functionality
   useEffect(() => {
     if (chartInstanceRef.current && searchTerm) {
       filterChart();
     }
-  }, [searchTerm]);
+  }, [searchTerm,filterChart]);
 
   // Re-apply fit to screen when the device type changes
   useEffect(() => {
     if (chartInstanceRef.current) {
       fitToScreen();
     }
-  }, [isMobile]);
+  }, [isMobile,fitToScreen,flag]);
 
   return (
     <div className="tree-container" style={{ width: '100%', overflow: 'hidden' }}>

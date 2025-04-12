@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ImageUploader from './ImageUploader';
+
+
 
 interface FamilyMember {
   _id?: string;
@@ -15,6 +18,7 @@ interface FamilyMember {
   parentId?: string;
   spouseId?: string;
   notes: string;
+  image: string;
 }
 
 const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
@@ -29,7 +33,8 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
     address: '',
     parentId: '',
     spouseId: '',
-    notes: ''
+    notes: '',
+    image: ''
   };
 
   const [formData, setFormData] = useState<FamilyMember>(initialFormState);
@@ -45,9 +50,10 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
     "email": "john.doe@example.com",
     "phone": "+1234567890",
     "address": "123 Main St, Anytown",
-    "notes": "Family patriarch"
+    "notes": "Family patriarch",
+    "image": "https://as1.ftcdn.net/v2/jpg/10/68/07/28/1000_F_1068072887_ChlB1ZlEEuI1dbyIQXmh9BaAXVDBhDO6.jpg"
 }]);
-  
+
   // Load existing family members for parent/spouse selection
   useEffect(() => {
     // First check local storage for existing family members
@@ -81,6 +87,17 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
     }));
   };
 
+  // Handle image upload
+  const handleImageChange = async (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      image: imageUrl
+    }));
+    console.log('Image URL:', imageUrl);
+    console.log("form Data: " ,formData );
+    
+  };
+
   const saveToLocalStorage = (member: FamilyMember) => {
     // Get existing data or initialize empty array
     const existingData = localStorage.getItem('familyMembers');
@@ -108,12 +125,14 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
       const memberWithTempId = saveToLocalStorage(formData);
       setFamilyMembers(prev => [...prev, memberWithTempId]);
       
+      console.log('Saving to MongoDB:', formData);
       // Then save to MongoDB
       const response = await axios.post('http://localhost:5001/api/family-members', formData,{
         headers: {
           'Content-Type': 'application/json'
         }
       });
+      console.log('Response from MongoDB:', response.data);
       
       if (response.data) {
         // Update the local storage entry with the real MongoDB ID
@@ -147,7 +166,14 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
               
               <form onSubmit={handleSubmit}>
                 <div className="row mb-3">
+                <div className="text-center mb-4">
+                <ImageUploader 
+                  initialImage={formData.image || "https://as1.ftcdn.net/v2/jpg/10/68/07/28/1000_F_1068072887_ChlB1ZlEEuI1dbyIQXmh9BaAXVDBhDO6.jpg"}
+                  onImageChange={handleImageChange}
+                />
+              </div>
                   <div className="col-md-6">
+                    
                     <div className="form-group mb-3">
                       <label htmlFor="firstName" className="form-label text-light">First Name</label>
                       <input
@@ -369,6 +395,8 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
         <div className="col-md-5">
           <div className="card bg-dark text-light p-4 border-0 h-100" style={{ borderRadius: '15px' }}>
             <div className="card-body">
+              
+              
               <h3 className="mb-4 text-light">Family Members Added</h3>
               {familyMembers.length > 0 ? (
                 <ul className="list-group">
