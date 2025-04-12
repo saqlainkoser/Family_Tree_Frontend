@@ -188,7 +188,7 @@ function Tree() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/family-members');
+        const response = await axios.get('https://family-tree-backend-2.onrender.com/api/family-members');
         console.log("Raw API response:", response);
         setFamilyData(response.data);
       } catch (error) {

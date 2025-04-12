@@ -32,7 +32,7 @@ function ImageUploader({ initialImage, onImageChange }) {
       formData.append('image', file);
 
       // Upload the image to your server
-      const response = await axios.post('http://localhost:5001/api/upload-image', formData, {
+      const response = await axios.post('https://family-tree-backend-2.onrender.com/api/upload-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

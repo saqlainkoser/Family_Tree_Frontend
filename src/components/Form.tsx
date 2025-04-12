@@ -65,7 +65,7 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
     // Then fetch from database
     const fetchFamilyMembers = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/family-members');
+        const response = await axios.get('https://family-tree-backend-2.onrender.com/api/family-members');
         if (response.data && response.data.length > 0) {
           setFamilyMembers(response.data);
           // Update local storage with latest data
@@ -127,7 +127,7 @@ const FamilyMemberForm = ({ onClose }: { onClose: () => void }) => {
       
       console.log('Saving to MongoDB:', formData);
       // Then save to MongoDB
-      const response = await axios.post('http://localhost:5001/api/family-members', formData,{
+      const response = await axios.post('https://family-tree-backend-2.onrender.com/api/family-members', formData,{
         headers: {
           'Content-Type': 'application/json'
         }
