@@ -7,11 +7,13 @@ function ImageUploader({ initialImage, onImageChange }) {
   const [error, setError] = useState('');
 
   const handleImageChange = async (e) => {
+    console.log(e.target.files[0]);
+    
     const file = e.target.files[0];
     if (!file) return;
 
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif','image/jpg'];
     if (!validTypes.includes(file.type)) {
       setError('Please select a valid image file (JPEG, PNG, or GIF)');
       return;

@@ -310,8 +310,8 @@ function Tree() {
           if (isMobile) {
             
             return `
-              <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:50px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
-                <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:100px;width:40px;height:40px;" />
+              <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:7px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
+                <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:10px;width:40px;height:40px;" />
                 
                 <div style="color:#fafafa;font-size:${d.depth < 2 ? 10 : 8}px;font-weight:bold;margin-left:50px;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:${d.width - 60}px;">
                   ${d.data.firstName} ${d.data.lastName}
@@ -336,10 +336,10 @@ function Tree() {
             `;
           } else {
             return `
-              <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:50px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
-                <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:100px;width:60px;height:60px;" />
+              <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:7px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
+                <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:10px;width:60px;height:60px;" />
                 
-                <div style="color:#fafafa;font-size:${d.depth < 2 ? 16 : 12}px;font-weight:bold;margin-left:70px;margin-top:15px">
+                <div style="color:#fafafa;font-size:${d.depth < 2 ? 16 : 12}px;font-weight:bold;margin-left:70px;margin-top:2px">
                   ${d.data.firstName} ${d.data.lastName}
                 </div>
                 <div style="color:#fafafa;margin-left:70px;margin-top:5px">
