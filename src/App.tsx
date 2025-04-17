@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import UserProfiles from './pages/UserProfiles';
 import Shijra from './pages/Shijra';
+import VerticalTree from './pages/Vetical_view';
 
 import TreeContextProvider from './Context/TreeContext';
 import FamilyMemberForm from './components/Form';
@@ -38,6 +39,7 @@ const App: React.FC = () => {
             <Route path="/users" element={<UserProfiles />} />
             <Route path="/add-members" element={<FamilyMemberForm onClose={() => window.history.back()} />} />
             <Route path="/shijra" element={<Shijra />} />
+            <Route path="/vertical" element={<VerticalTree />} />
           </Routes>
         </Router>
       </ThemeProvider>

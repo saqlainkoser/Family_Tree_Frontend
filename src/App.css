@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+foreignObject.node-foreign-object{
+  fill: none;
+  color: red;
+  background-color: red;
+}

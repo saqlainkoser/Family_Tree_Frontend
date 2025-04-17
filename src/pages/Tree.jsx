@@ -19,6 +19,9 @@ function Tree() {
   const [isMobile, setIsMobile] = useState(false);
   const [scale, setScale] = useState(1);
   
+ 
+
+
   // Check if device is mobile with a more realistic threshold
   useEffect(() => {
     const checkIfMobile = () => {
@@ -35,7 +38,7 @@ function Tree() {
     };
     
     // Initial check
-    checkIfMobile();
+    // checkIfMobile();
     
     // Add event listener for window resize
     window.addEventListener('resize', checkIfMobile);
@@ -71,12 +74,11 @@ function Tree() {
     if (isMobile) {
       // Reset any previous transformations
       chartInstanceRef.current
-        .compact(true)
-        .compactMarginBetween(() => 5) // Reduce space between siblings
-        .compactMarginPair(() => 15) // Reduce space between parent-child
-        .neighbourMargin(() => 15) // Reduce space between neighboring branches
+        .compactMarginBetween(() => 30) // Reduce space between siblings
+        .compactMarginPair(() => 30) // Reduce space between parent-child
+        .neighbourMargin(() => 40) // Reduce space between neighboring branches
         .nodeWidth(() => 120) // Smaller nodes
-        .nodeHeight(() => 50) // Smaller nodes
+        .nodeHeight(() => 60) // Smaller nodes
         .render()
         .fit();
       
@@ -97,10 +99,9 @@ function Tree() {
       }, 100);
     } else {
       chartInstanceRef.current
-        .compact(false)
         .compactMarginBetween(() => 35)
         .compactMarginPair(() => 70)
-        .neighbourMargin(() => 100)
+        .neighbourMargin(() => 150)
         .nodeWidth((d) => {
           if (d.depth === 0) return 250;
           if (d.depth === 1) return 220;
@@ -217,7 +218,7 @@ function Tree() {
     window.removeNode = removeNode;
     window.editNode = editNode;
     window.showDetails = showDetails;
-
+    console.log(chartInstanceRef);
     return () => {
       // Clean up the global functions
       delete window.addNode;
@@ -241,6 +242,9 @@ function Tree() {
     
     fetchData();
   }, []);
+
+  
+
 
   // Initialize the chart
   useEffect(() => {
@@ -275,10 +279,11 @@ function Tree() {
       const chart = new OrgChart()
         .container(chartRef.current)
         .data(dataFlattened)
-        .nodeHeight((d) => isMobile ? 50 : 70)
+        .compact(true)
+        .nodeHeight((d) => isMobile ? 70 : 80 )
         .nodeWidth((d) => {
           if (isMobile) {
-            return 120; // Consistent width for mobile
+            return 250; // Consistent width for mobile
           } else {
             if (d.depth === 0) return 250;
             if (d.depth === 1) return 220;
@@ -289,20 +294,20 @@ function Tree() {
           console.log("Node clicked:", nodeData);
           showDetails(nodeData.data._id);
         })
-        .childrenMargin((d) => isMobile ? 20 : 50)
-        .compactMarginBetween((d) => isMobile ? 5 : 35)
-        .compactMarginPair((d) => isMobile ? 15 : 70)
-        .neighbourMargin((a, b) => isMobile ? 15 : 100)
+        .childrenMargin((d) => 70)
+      .compactMarginBetween((d) => 35)
+      .compactMarginPair((d) => 30)
+      .neighbourMargin((a, b) => 20)
         .buttonContent(({ node, state }) => {
           return `
-          <div style="border-radius:3px;padding:3px;font-size:${isMobile ? '7px' : '10px'};margin:auto auto;background-color:lightgray"> <span style="font-size:${isMobile ? '6px' : '9px'}">${
+          <div style="text-align:center;width:30px;height:20px;border-radius:3px;padding:3px;font-size:${isMobile ? '10px' : '10px'};margin:auto auto;background-color:#288B8D"> <span style="font-size:${isMobile ? '6px' : '9px'}">${
             node.children
               ? `<i class="fas fa-chevron-up"></i>`
               : `<i class="fas fa-chevron-down"></i>`
           }</span> ${node.data._directSubordinates}  </div>`;
         })
         .nodeContent(function (d, i, arr, state) {
-          const colors = ['#278B8D', '#404040', '#0C5C73', '#33C6CB'];
+          const colors = ['#333333', '#555555', '#777777', '#999999'];
           const color = colors[d.depth % colors.length];
           if(!d.data.image){
             d.data.image = "http://res.cloudinary.com/djeajklvz/image/upload/c_auto,g_auto,h_200,w_200/v1/familyTree/16aq11ka";
@@ -339,7 +344,7 @@ function Tree() {
               <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:7px;cursor:pointer;" onclick="showDetails('${d.data._id}')">
                 <img src="${d.data.image}" style="position:absolute;margin-top:5px;margin-left:5px;border-radius:10px;width:60px;height:60px;" />
                 
-                <div style="color:#fafafa;font-size:${d.depth < 2 ? 16 : 12}px;font-weight:bold;margin-left:70px;margin-top:2px">
+                <div style="color:#fafafa;font-size:${d.depth < 2 ? 16 : 12}px;font-weight:bold;margin-left:70px;margin-top:10px">
                   ${d.data.firstName} ${d.data.lastName}
                 </div>
                 <div style="color:#fafafa;margin-left:70px;margin-top:5px">
@@ -348,13 +353,13 @@ function Tree() {
               </div>
               ${flag === true ?
               `<div style="display:flex;flex-direction:column;position:absolute;right:-25px;top:50%;transform:translateY(-50%)">
-                <div style="position:relative;left:-8px;cursor:pointer;background-color:rgba(0,0,0,0.2);padding:5px;border-radius:50%;" onclick="editNode('${d.data._id}')">
+                <div style="position:relative;left:-8px;cursor:pointer;background-color:rgba(86, 101, 115);padding:5px;border-radius:50%;" onclick="editNode('${d.data._id}')">
                   <i class="fas fa-edit" style="color:#000;"></i>
                 </div>
-                <div style="position:relative;left:-2px;cursor:pointer;background-color:rgba(0,0,0,0.2);padding:5px;border-radius:50%;" onclick="removeNode('${d.data._id}')">
+                <div style="position:relative;left:-2px;cursor:pointer;background-color:rgba(86, 101, 115);padding:5px;border-radius:50%;" onclick="removeNode('${d.data._id}')">
                   <i class="fas fa-minus" style="color:#000;"></i>
                 </div>
-                <div style="position:relative;left:-8px;cursor:pointer;background-color:rgba(0,0,0,0.2);padding:5px;border-radius:50%;" onclick="addNode('${d.data._id}')">
+                <div style="position:relative;left:-8px;cursor:pointer;background-color:rgba(86, 101, 115);padding:5px;border-radius:50%;" onclick="addNode('${d.data._id}')">
                   <i class="fas fa-plus" style="color:#000;"></i>
                 </div>
               </div>` : ''
@@ -364,7 +369,7 @@ function Tree() {
         });
 
       chartInstanceRef.current = chart;
-      chart.render();
+      chart.render().fit();
       
       // Apply initial fit to screen with a slight delay to ensure rendering
       setTimeout(() => {
@@ -386,6 +391,20 @@ function Tree() {
     }
   }, [searchTerm, filterChart]);
 
+  useEffect(() => {
+    if (chartInstanceRef.current) {
+      // Add CSS style for connecting lines
+      chartInstanceRef.current.select(this)
+        .attr("stroke", '#566573')
+        .attr('stroke-linecap', 'round')
+        .attr("stroke-width", 5)
+        .attr('pointer-events', 'none')
+        .attr("marker-start", d => `url(#${d.from + "_" + d.to})`)
+        .attr("marker-end", d => `url(#arrow-${d.from + "_" + d.to})`)
+    }
+  }, [chartInstanceRef]);
+
+
   // Re-apply fit to screen when the device type changes
   useEffect(() => {
     if (chartInstanceRef.current) {
@@ -400,7 +419,7 @@ function Tree() {
       
       // Initialize touch variables
       let lastTouchDistance = 0;
-      let currentScale = 1;
+      let currentScale = 2;
       let startX, startY;
       let lastX, lastY;
       let isDragging = false;
@@ -445,7 +464,7 @@ function Tree() {
           if (lastTouchDistance > 0) {
             const touchDelta = currentTouchDistance / lastTouchDistance;
             const newScale = currentScale * touchDelta;
-            
+
             // Limit scale to reasonable values
             if (newScale >= 0.5 && newScale <= 3) {
               currentScale = newScale;
@@ -468,7 +487,7 @@ function Tree() {
               }
             }
           }
-          
+
           lastTouchDistance = currentTouchDistance;
         } else if (e.touches.length === 1 && isDragging && chartInstanceRef.current) {
           // Handle pan/drag
@@ -705,28 +724,6 @@ function Tree() {
         )}
       </Dialog>
       
-      {/* Instructions overlay for mobile users */}
-      {isMobile && (
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: '10px',
-            left: '10px',
-            right: '10px',
-            padding: '10px',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: 'white',
-            borderRadius: '8px',
-            fontSize: '12px',
-            textAlign: 'center',
-            zIndex: 1000,
-            pointerEvents: 'none',
-            opacity: 0.8
-          }}
-        >
-          Use two fingers to zoom in/out. Use one finger to drag the tree.
-        </div>
-      )}
     </div>
   );
 }

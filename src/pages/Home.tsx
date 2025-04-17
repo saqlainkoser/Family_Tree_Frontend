@@ -107,7 +107,8 @@ const Home: React.FC = () => {
               <Button
                 variant="outlined"
                 size="large"
-                onClick={() => navigate('/search')}
+                // onClick={() => navigate('/search')}
+                onClick={() => navigate('/tree')}
                 sx={{ px: 4, py: 1.5 }}
               >
                 Search Family
