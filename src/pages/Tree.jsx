@@ -55,7 +55,11 @@ function Tree() {
     const data = chartInstanceRef.current.data();
     data.forEach((d) => (d._expanded = false));
     data.forEach((d) => {
-      if (searchTerm && (
+      if(searchTerm === ''){
+        d._highlighted = false;
+        d._expanded = false;
+      }
+      if (searchTerm  && (
           d.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || 
           d.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           d.phone.toLowerCase().includes(searchTerm.toLowerCase())
@@ -64,7 +68,7 @@ function Tree() {
         d._expanded = true;
       }
     });
-    chartInstanceRef.current.data(data).render().fit();
+    chartInstanceRef.current.data(data).setActiveNodeCentered(true).render().fit();
   }, [searchTerm]);
 
   const fitToScreen = useCallback(() => {
@@ -322,7 +326,7 @@ function Tree() {
                   ${d.data.firstName} ${d.data.lastName}
                 </div>
                 <div style="color:#fafafa;font-size:8px;margin-left:50px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:${d.width - 60}px;">
-                  ${d.data.phone ? d.data.phone.substring(0, 10) + (d.data.phone.length > 10 ? '...' : '') : ''}
+                  ${d.data.phone ="" ? d.data.phone.substring(0, 10) + (d.data.phone.length > 10 ? '...' : '') : ''}
                 </div>
               </div>
               ${flag === true ?
@@ -347,8 +351,8 @@ function Tree() {
                 <div style="color:#fafafa;font-size:${d.depth < 2 ? 16 : 12}px;font-weight:bold;margin-left:70px;margin-top:10px">
                   ${d.data.firstName} ${d.data.lastName}
                 </div>
-                <div style="color:#fafafa;margin-left:70px;margin-top:5px">
-                  ${d.data.phone}
+                <div   style="color:#fafafa;margin-left:70px;margin-top:5px">
+                  ${d.data.phone=""}
                 </div>
               </div>
               ${flag === true ?

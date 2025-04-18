@@ -30,7 +30,7 @@ const App: React.FC = () => {
         <CssBaseline />
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Tree />} />
             <Route path="/tree" element={<Tree />} />
             <Route path="/search" element={<Search />} />
             <Route path="/profile" element={<Profile />} />
